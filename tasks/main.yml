@@ -1,0 +1,53 @@
+---
+
+- name: update apt cache
+  become: yes
+  apt: update_cache=yes cache_valid_time=86400 # NOTE: one day in seconds
+  tags:
+    - composer
+
+- name: install composer package dependencies
+  become: yes
+  apt: name={{item}} state=present
+  with_items:
+       - curl
+       - php-cli
+       - php-mbstring
+       - git
+       - unzip
+  tags:
+    - composer
+
+- name: install composer locally
+  shell: >
+    curl -sS https://getcomposer.org/installer | php
+    creates=/tmp/composer.phar
+  args:
+    chdir: /tmp
+  tags:
+    - composer
+
+- name: install composer globally
+  become: true
+  shell: >
+    cp /tmp/composer.phar /usr/local/bin/composer
+    creates=/usr/local/bin/composer
+  tags:
+    - composer
+
+- name: set permissions on composer
+  become: true
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"
+  tags:
+    - composer
+
+- name: set github oauth config
+  composer:
+    command: config
+    arguments: '-g github-oauth.github.com "{{ github_oauth_token }}"'
+    working_dir: "/home/{{ ansible_ssh_user }}"
+  tags:
+    - composer
+    - github_oauth
