@@ -8,7 +8,7 @@ Role Variables
 --------------
 
 ```
-github_oauth_token -> ( not required )
+github_oauth_token ( not required )
 composer_user
 
 ```

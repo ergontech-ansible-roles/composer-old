@@ -1,13 +1,30 @@
 ---
 
-- name: Download composer installer
+
+- name: Download Composer installer checksum
+  get_url:
+    url: https://composer.github.io/installer.sig
+    dest: /tmp/composer-installer.sig
+
+# !@#!@
+- slurp:
+    path: /tmp/composer-installer.sig
+  register: composer_checksum
+
+- name: Download Composer installer
+  become: yes
   get_url:
     url: https://getcomposer.org/installer
-    dest: /tmp/composer.phar
-  tags:
-    - composer
+    dest: /tmp/composer-setup.php
+    checksum: "sha384:{{ composer_checksum.content | b64decode}}"
 
-- name: Install composer globally
+- name: Install Composer
+  command: php composer-setup.php --quite
+  args:
+    chdir: /tmp
+    creates: /tmp/composer.phar
+
+- name: Ensure Composer is available globally
   become: true
   shell: cp /tmp/composer.phar /usr/local/bin/composer
   args:
