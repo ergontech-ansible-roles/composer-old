@@ -16,7 +16,7 @@ composer_user
 ----------------
 
 ```
-# requirments.yml
+# requirements.yml
 
 - src: https://github.com/ergontech-ansible-roles/composer-role
   version: master
