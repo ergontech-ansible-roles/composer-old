@@ -26,6 +26,7 @@
   composer:
     command: self-update
     global_command: yes
+  when: composer_use_latest
   tags:
     - composer
 

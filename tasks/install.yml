@@ -19,7 +19,7 @@
     checksum: "sha384:{{ composer_checksum.content | b64decode}}"
 
 - name: Install Composer
-  command: php composer-setup.php --quite
+  command: "php composer-setup.php --quite --version={{ composer_version }}"
   args:
     chdir: /tmp
     creates: /tmp/composer.phar
