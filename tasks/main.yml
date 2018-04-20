@@ -1,53 +1,41 @@
 ---
 
-- name: update apt cache
+- name: Install Composer package dependencies
   become: yes
-  apt: update_cache=yes cache_valid_time=86400 # NOTE: one day in seconds
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ composer_dependencies }}"
   tags:
     - composer
 
-- name: install composer package dependencies
-  become: yes
-  apt: name={{item}} state=present
-  with_items:
-       - curl
-       - php-cli
-       - php-mbstring
-       - git
-       - unzip
-  tags:
-    - composer
-
-- name: install composer locally
-  shell: >
-    curl -sS https://getcomposer.org/installer | php
-    creates=/tmp/composer.phar
-  args:
-    chdir: /tmp
-  tags:
-    - composer
-
-- name: install composer globally
-  become: true
-  shell: >
-    cp /tmp/composer.phar /usr/local/bin/composer
-    creates=/usr/local/bin/composer
-  tags:
-    - composer
-
-- name: set permissions on composer
-  become: true
-  file:
+- name: Check if Composer is installed
+  stat:
     path: /usr/local/bin/composer
-    mode: "a+x"
+  register: composer_bin
   tags:
     - composer
 
-- name: set github oauth config
+- include: install.yml
+  when: not composer_bin.stat.exists
+  tags:
+    - composer
+
+- name: Update Composer
+  composer:
+    command: self-update
+    global_command: yes
+  tags:
+    - composer
+
+
+- name: Set github oauth config
   composer:
     command: config
     arguments: '-g github-oauth.github.com "{{ github_oauth_token }}"'
-    working_dir: "/home/{{ ansible_ssh_user }}"
+    working_dir: "/home/{{ composer_user }}"
+  when: github_oauth_token is defined
   tags:
     - composer
     - github_oauth

@@ -1,0 +1,24 @@
+---
+
+- name: Download composer installer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: /tmp/composer.phar
+  tags:
+    - composer
+
+- name: Install composer globally
+  become: true
+  shell: cp /tmp/composer.phar /usr/local/bin/composer
+  args:
+    creates: /usr/local/bin/composer
+  tags:
+    - composer
+
+- name: Set permissions on composer
+  become: true
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"
+  tags:
+    - composer

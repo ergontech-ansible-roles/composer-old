@@ -1,0 +1,10 @@
+---
+
+composer_dependencies:
+  - curl
+  - php-cli
+  - php-mbstring
+  - git
+  - unzip
+
+composer_user: root
