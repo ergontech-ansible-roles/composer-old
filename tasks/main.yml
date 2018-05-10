@@ -35,6 +35,8 @@
     path: "{{ composer_home_path }}"
     owner: "{{ composer_user }}"
     state: directory
+  tags:
+    - composer
 
 - name: Add GitHub OAuth token for Composer
   template:
