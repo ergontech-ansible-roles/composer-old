@@ -1,0 +1,14 @@
+---
+
+- name: Check for github oauth
+  command: grep -c "github.com" /home/{{ ansible_ssh_user }}/.config/composer/auth.json
+  register: checkcomposer
+  ignore_errors: yes
+  changed_when: no
+
+- name: Add GitHub OAuth token for Composer
+  composer:
+    command: config
+    arguments: '-g github-oauth.github.com "{{ github_oauth_token }}"'
+    working_dir: "/home/{{ ansible_ssh_user }}"
+  when: checkcomposer.stdout == 0 or checkcomposer.rc != 0

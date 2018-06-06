@@ -7,10 +7,5 @@ composer_dependencies:
   - git
   - unzip
 
-composer_user: root
 composer_version: 1.6.4
-composer_use_latest: false
-
-composer_github_oauth_token: ""
-
-composer_home_path: "~/.composer"
+composer_use_latest: true

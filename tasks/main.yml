@@ -30,20 +30,8 @@
   tags:
     - composer
 
-- name: Ensure composer directory exists
-  file:
-    path: "{{ composer_home_path }}"
-    owner: "{{ composer_user }}"
-    state: directory
-  tags:
-    - composer
-
-- name: Add GitHub OAuth token for Composer
-  template:
-    src: "auth.json.j2"
-    dest: "{{ composer_home_path }}/auth.json"
-    owner: "{{ composer_user }}"
-  when: composer_github_oauth_token != ''
+- include: configure-oath.yml
+  when: composer_github_oauth_token is defined
   tags:
     - composer
     - github_oauth

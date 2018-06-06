@@ -29,13 +29,9 @@
   shell: cp /tmp/composer.phar /usr/local/bin/composer
   args:
     creates: /usr/local/bin/composer
-  tags:
-    - composer
 
 - name: Set permissions on composer
   become: true
   file:
     path: /usr/local/bin/composer
     mode: "a+x"
-  tags:
-    - composer

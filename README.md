@@ -9,7 +9,6 @@ Role Variables
 
 ```
 github_oauth_token ( not required )
-composer_user: default(root)
 composer_version: default(1.6.4)
 composer_use_latest: default(false)
 
