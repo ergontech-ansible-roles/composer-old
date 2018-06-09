@@ -23,6 +23,7 @@
     - composer
 
 - name: Update Composer
+  become: yes
   composer:
     command: self-update
     global_command: yes
