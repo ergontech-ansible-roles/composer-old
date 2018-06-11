@@ -1,0 +1,38 @@
+---
+
+- name: Install Composer package dependencies
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ composer_dependencies }}"
+  tags:
+    - composer
+
+- name: Check if Composer is installed
+  stat:
+    path: /usr/local/bin/composer
+  register: composer_bin
+  tags:
+    - composer
+
+- include: install.yml
+  when: not composer_bin.stat.exists
+  tags:
+    - composer
+
+- name: Update Composer
+  become: yes
+  composer:
+    command: self-update
+    global_command: yes
+  when: composer_use_latest
+  tags:
+    - composer
+
+- include: configure-oath.yml
+  when: composer_github_oauth_token is defined
+  tags:
+    - composer
+    - github_oauth

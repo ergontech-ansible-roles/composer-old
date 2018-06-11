@@ -1,0 +1,11 @@
+---
+
+composer_dependencies:
+  - curl
+  - php-cli
+  - php-mbstring
+  - git
+  - unzip
+
+composer_version: 1.6.4
+composer_use_latest: true
